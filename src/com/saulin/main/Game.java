@@ -1,9 +1,15 @@
 package com.saulin.main;
 
+import com.saulin.entities.Entity;
+import com.saulin.entities.Player;
+import com.saulin.graphics.SpriteSheet;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game extends Canvas implements Runnable{
 
@@ -13,15 +19,22 @@ public class Game extends Canvas implements Runnable{
     private final int WIDTH = 240;
     private final int HEIGHT = 160;
     private final int SCALE = 3;
-    private BufferedImage bufferedImage = new BufferedImage(this.WIDTH, this.HEIGHT, BufferedImage.TYPE_INT_RGB);;
-    //private SpriteSheet spriteSheet = new SpriteSheet("/spritesheet.png");
-
+    private BufferedImage bufferedImage;
+    public static SpriteSheet spriteSheet = new SpriteSheet("/spritesheet.png");
+    public List<Entity> entities;
 
 
     public Game() {
         this.setPreferredSize(new Dimension(this.WIDTH*this.SCALE, this.HEIGHT*this.SCALE));
 
         this.initFrame();
+
+        this.bufferedImage = new BufferedImage(this.WIDTH, this.HEIGHT, BufferedImage.TYPE_INT_RGB);
+        this.entities = new ArrayList<Entity>();
+
+        Player player = new Player(0, 0, 16, 16, spriteSheet.getSprite(32, 16, 16, 16));
+        addKeyListener(player);
+        this.entities.add(player);
     }
 
     public void initFrame() {
@@ -57,6 +70,7 @@ public class Game extends Canvas implements Runnable{
     }
 
     public void tick() {
+        this.entities.forEach(e -> e.tick());
     }
 
     public void render() {
@@ -69,10 +83,13 @@ public class Game extends Canvas implements Runnable{
 
         Graphics graphics = bufferedImage.getGraphics();
 
-        graphics.setColor(Color.black);
+        graphics.setColor(Color.green);
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
 
         /***Renderizando o Jogo***/
+        for (Entity e : this.entities) {
+            e.render(graphics);
+        }
         /***/
 
         graphics.dispose();
