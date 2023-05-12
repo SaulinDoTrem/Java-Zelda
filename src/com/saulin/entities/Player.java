@@ -68,21 +68,15 @@ public class Player extends Entity implements KeyListener {
         boolean down = code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN;
 
         if(up){
-            moved = isMoving;
             this.setUp(isMoving);
         }
         if(left) {
-            moved = isMoving;
-            dir = LEFT_DIR;
             this.setLeft(isMoving);
         }
         if(down) {
-            moved = isMoving;
             this.setDown(isMoving);
         }
         if(right) {
-            moved = isMoving;
-            dir = RIGHT_DIR;
             this.setRight(isMoving);
         }
     }
@@ -110,15 +104,21 @@ public class Player extends Entity implements KeyListener {
     @Override
     public void tick() {
         if(this.isUp()) {
+            moved = true;
             this.setY(this.getY()-speed);
         }
         if(this.isDown()) {
+            moved = true;
             this.setY(this.getY()+speed);
         }
         if(this.isLeft()) {
+            dir = LEFT_DIR;
+            moved = true;
             this.setX(this.getX()-speed);
         }
         if(this.isRight()) {
+            dir = RIGHT_DIR;
+            moved = true;
             this.setX(this.getX()+speed);
         }
 
@@ -131,6 +131,8 @@ public class Player extends Entity implements KeyListener {
                     spriteIndex = 0;
             }
         }
+
+        moved = false;
     }
 
     @Override
